@@ -26,12 +26,12 @@ int load_user_info(struct user_info user[])
 				temp.id_num = user[i].id_num;
 				user[i].id_num = user[j].id_num;
 				user[j].id_num = temp.id_num;
-				wcsncpy(temp.id, user[i].id);
-				wcsncpy(user[i].id, user[j].id);
-				wcsncpy(user[j].id, temp.id);
-				wcsncpy(temp.password, user[i].password);
-				wcsncpy(user[i].password, user[j].password);
-				wcsncpy(user[j].password, temp.password);
+				strcpy(temp.id, user[i].id);
+				strcpy(user[i].id, user[j].id);
+				strcpy(user[j].id, temp.id);
+				strcpy(temp.password, user[i].password);
+				strcpy(user[i].password, user[j].password);
+				strcpy(user[j].password, temp.password);
 			}
 		}
 	}
