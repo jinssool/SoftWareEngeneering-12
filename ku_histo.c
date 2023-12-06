@@ -10,6 +10,8 @@ const char* FILENAME;
 int n;
 int colors[256] = { 0, };
 int thread_num = 0;
+#define COLORS_SIZE 256
+extern int colors[COLORS_SIZE];
 
 typedef struct {
 	int colorTableOffset;
@@ -60,19 +62,29 @@ int getResultString(int num, int value, char* str) {
 
 void writeResults(const char* name, int i) {
     int fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
-    int sum;
-    char newLine = '\n';
-    for (int j = 0; j < 256; j += i) {
-        sum = 0;
-        char str[20];
-        for (int k = j; k < j + i && k < 256; k++) {
-            sum += colors[k];
+
+    if (fd != -1) {
+        int sum;
+        char newLine = '\n';
+        
+        for (int j = 0; j < COLORS_SIZE; j += i) {
+            sum = 0;
+            char str[20];
+
+            for (int k = j; k < j + i && k < COLORS_SIZE; k++) {
+                sum += colors[k];
+            }
+
+            int len = getResultString(j, sum, str);
+            write(fd, str, len);
+
+            if (j + i != COLORS_SIZE) {
+                write(fd, &newLine, 1);
+            }
         }
-        int len = getResultString(j, sum, str);
-        write(fd, str, len);
-        if (j + i != 256) write(fd, &newLine, 1);
+
+        close(fd);
     }
-    close(fd);
 }
 
 void* thread_rountine(void* arg) {
