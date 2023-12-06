@@ -3,7 +3,8 @@
 #include "Project6.h"
 
 
-char id[10], password[10];
+char id[10];
+char password[10];
 
 
 int load_user_info(struct user_info user[])
@@ -11,10 +12,11 @@ int load_user_info(struct user_info user[])
 	FILE* fp;
 	if ((fp = fopen("user_data.txt", "r")) == NULL)
 		return -1;
-	int i, j;
+	int i;
+    int j;
 	struct user_info temp;
 	for (i = 0; i < 10; i++) 
-		fscanf(fp, "%d %s %s", &user[i].id_num, user[i].id, user[i].password);
+		fscanf(fp, "%d %10s %10s", &user[i].id_num, user[i].id, user[i].password);
 	for (i = 0; i < 10; i++)
 	{
 		for (j = i + 1; j < 10; j++)
@@ -24,12 +26,12 @@ int load_user_info(struct user_info user[])
 				temp.id_num = user[i].id_num;
 				user[i].id_num = user[j].id_num;
 				user[j].id_num = temp.id_num;
-				strcpy(temp.id, user[i].id);
-				strcpy(user[i].id, user[j].id);
-				strcpy(user[j].id, temp.id);
-				strcpy(temp.password, user[i].password);
-				strcpy(user[i].password, user[j].password);
-				strcpy(user[j].password, temp.password);
+				wcsncpy(temp.id, user[i].id);
+				wcsncpy(user[i].id, user[j].id);
+				wcsncpy(user[j].id, temp.id);
+				wcsncpy(temp.password, user[i].password);
+				wcsncpy(user[i].password, user[j].password);
+				wcsncpy(user[j].password, temp.password);
 			}
 		}
 	}
@@ -39,7 +41,9 @@ int load_user_info(struct user_info user[])
 
 int check_login(struct user_info user[], char* id, char* password)
 {
-	int low, high, middle;
+	int low;
+    int high;
+    int middle;
 	low = 0;
 	high = 9;
 	while (low <= high)
