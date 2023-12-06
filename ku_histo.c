@@ -57,21 +57,22 @@ int getResultString(int num, int value, char* str) {
 	return len;
 }
 
+
 void writeResults(const char* name, int i) {
-	int fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
-	int sum;
-	char newLine = '\n';
-	for (int j = 0; j < 256; j += i) {
-		sum = 0;
-		char str[20];
-		for (int k = j; k < j + i; k++) {
-			sum += colors[k];
-		}
-		int len = getResultString(j, sum, str);
-		write(fd, str, len);
-		if (j + i != 256) write(fd, &newLine, 1);
-	}
-	close(fd);
+    int fd = open(name, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
+    int sum;
+    char newLine = '\n';
+    for (int j = 0; j < 256; j += i) {
+        sum = 0;
+        char str[20];
+        for (int k = j; k < j + i && k < 256; k++) {
+            sum += colors[k];
+        }
+        int len = getResultString(j, sum, str);
+        write(fd, str, len);
+        if (j + i != 256) write(fd, &newLine, 1);
+    }
+    close(fd);
 }
 
 void* thread_rountine(void* arg) {
